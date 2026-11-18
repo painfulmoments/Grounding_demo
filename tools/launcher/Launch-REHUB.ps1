@@ -306,6 +306,12 @@ try {
             if (-not (Test-Path -LiteralPath $exe -PathType Leaf) -or -not (Test-Path -LiteralPath $gameBinary -PathType Leaf) -or -not (Test-Path -LiteralPath $content -PathType Container)) {
                 throw 'The complete Windows demo is missing. Extract every folder from the release archive and place this launcher beside REHUB.exe. / 请完整解压试玩包，保留目录结构，并将启动器放在 REHUB.exe 旁。'
             }
+            foreach ($containerName in @('global.ucas', 'REHUB-Windows.ucas')) {
+                $containerPath = Join-Path $content $containerName
+                if (-not (Test-Path -LiteralPath $containerPath -PathType Leaf) -or (Get-Item -LiteralPath $containerPath).Length -eq 0) {
+                    throw 'Game data is missing. Download BOTH Runtime.zip and GameData.zip, then extract both into the SAME destination folder. / 缺少游戏资源，请下载两个 ZIP，并解压到同一个目标目录。'
+                }
+            }
             & $saveValues $values
             $arguments = @(('-GameIni="' + $script:SettingsPath + '"'), '-vr', '-windowed', '-ResX=1280', '-ResY=720')
             Start-Process -FilePath $exe -ArgumentList $arguments -WorkingDirectory $script:ApplicationRoot
