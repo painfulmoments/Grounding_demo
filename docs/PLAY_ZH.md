@@ -1,6 +1,6 @@
 # REHUB Windows / Quest 3 试玩说明
 
-[下载试玩版](https://github.com/painfulmoments/Grounding_demo/releases/latest) · [项目主页](../README.zh-CN.md) · [English](PLAY_EN.md)
+[下载试玩版](https://github.com/painfulmoments/Grounding_demo/releases/tag/v1.0.1) · [项目主页](../README.zh-CN.md) · [English](PLAY_EN.md)
 
 ## 1. 先确认设备
 
@@ -18,12 +18,12 @@
 
 ## 2. 下载完整试玩包
 
-**两个 ZIP 都要下载，并解压到同一个目标目录。**
+**两个 ZIP 都要下载，并解压到同一个目标目录。** 运行程序包约 **306 MiB**，资源包约 **1.80 GiB**；建议预留 **8 GB** 空间存放下载和解压内容。
 
-打开 [最新 Release](https://github.com/painfulmoments/Grounding_demo/releases/latest)，在 **Assets** 中下载：
+打开 [v1.0.1 Release](https://github.com/painfulmoments/Grounding_demo/releases/tag/v1.0.1)，在 **Assets** 中下载：
 
-- **`REHUB-Windows-x64-v1.0.0-Runtime.zip`**
-- **`REHUB-Windows-x64-v1.0.0-GameData.zip`**
+- **`REHUB-Windows-x64-v1.0.1-Runtime.zip`**
+- **`REHUB-Windows-x64-v1.0.1-GameData.zip`**
 
 它们是两个独立 ZIP，不是 7z 分卷；两个都需要，不需要安装 7-Zip。
 
@@ -42,7 +42,7 @@
 
 **“Source code (zip)”和“Source code (tar.gz)”不是试玩程序。** 不要在压缩包内部直接运行，也不要只把 EXE 拷走；程序、运行库和资源子目录必须保留在一起。
 
-试玩无需安装 Unreal Editor 或 Visual Studio。如果提示缺少 Visual C++ 运行库，可安装试玩包附带的运行环境（若有），或使用 [微软官方 x64 Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist)。不要从不相关的软件目录随意复制 DLL。
+试玩无需安装 Unreal Editor 或 Visual Studio。如果提示缺少 Visual C++ 运行库，可安装包内 `Engine/Extras/Redist/en-us/vc_redist.x64.exe`，或使用 [微软官方 x64 Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist)。不要从不相关的软件目录随意复制 DLL。
 
 ## 3. 演示云服务与隐私
 
@@ -97,3 +97,5 @@
 REHUB 是研究与作品展示原型，尚未经过作为医疗治疗手段的临床验证。
 
 [第三方说明与使用范围](THIRD_PARTY_NOTICES.md)
+
+[构建与验证记录](BUILD_AND_VALIDATION.md) · [报告问题](https://github.com/painfulmoments/Grounding_demo/issues)

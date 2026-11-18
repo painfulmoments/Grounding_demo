@@ -2,11 +2,17 @@
 
 **在森林与瀑布场景中，与数字人通过语音完成五阶段着陆练习。**
 
-[下载 Windows 试玩版](https://github.com/painfulmoments/Grounding_demo/releases/latest) · [中文试玩说明](docs/PLAY_ZH.md) · [English](README.md)
+**Unreal Engine 5.7 · Windows PC VR / OpenXR · 中文 / English**
 
-**打开即可体验：** 语音与 AI 对话由**作者提供的演示云服务**支持，无需注册个人云账户或填写 API Key。仍需联网和可运行 PC VR 的设备；这不是 Quest 独立应用。
+[下载 Windows 试玩版](https://github.com/painfulmoments/Grounding_demo/releases/tag/v1.0.1) · [中文试玩说明](docs/PLAY_ZH.md) · [English](README.md)
 
 ![REHUB 着陆项目 Teaser](docs/images/Teaser.jpg)
+
+*Teaser 展示项目的研究框架；当前下载提供数字人引导的着陆体验，不提供全部研究条件切换或生理信号采集。*
+
+**版本状态：** Windows 打包版已完成构建、桌面场景与启动器核对；完整打包版 Quest Link 对话仍待实机验证。[构建与验证记录](docs/BUILD_AND_VALIDATION.md)。
+
+**试玩条件：** 语音与 AI 对话由**作者提供的演示云服务**支持，无需注册个人云账户或填写 API Key。仍需联网和可运行 PC VR 的设备；这不是 Quest 独立应用。
 
 REHUB 将视觉观察、声音觉察、认知着陆、呼吸调节和结束整合串成一段引导体验。数字人支持语音交互、AI 辅助回复、口型与面部动画、自然待机和说话动作，以及温和的注视跟随。
 
@@ -16,11 +22,15 @@ REHUB 将视觉观察、声音觉察、认知着陆、呼吸调节和结束整�
 
 **两个 ZIP 都要下载，并解压到同一个目标目录。少一个就无法构成完整试玩程序。**
 
-- [运行程序包：REHUB-Windows-x64-v1.0.0-Runtime.zip](https://github.com/painfulmoments/Grounding_demo/releases/latest/download/REHUB-Windows-x64-v1.0.0-Runtime.zip)
-- [游戏资源包：REHUB-Windows-x64-v1.0.0-GameData.zip](https://github.com/painfulmoments/Grounding_demo/releases/latest/download/REHUB-Windows-x64-v1.0.0-GameData.zip)
+| 文件 | 大小／用途 |
+| --- | --- |
+| [运行程序包](https://github.com/painfulmoments/Grounding_demo/releases/download/v1.0.1/REHUB-Windows-x64-v1.0.1-Runtime.zip) | 约 306 MiB，必需 |
+| [游戏资源包](https://github.com/painfulmoments/Grounding_demo/releases/download/v1.0.1/REHUB-Windows-x64-v1.0.1-GameData.zip) | 约 1.80 GiB，必需 |
+| [Extract-REHUB.cmd](https://github.com/painfulmoments/Grounding_demo/releases/download/v1.0.1/Extract-REHUB.cmd) | 可选，校验并解压两个包 |
+| [SHA256SUMS.txt](https://github.com/painfulmoments/Grounding_demo/releases/download/v1.0.1/SHA256SUMS.txt) | 可选，手动完整性检查 |
 
-1. 从同一个 [Release 的 Assets](https://github.com/painfulmoments/Grounding_demo/releases/latest) 下载上面两个文件。
-2. 将两个 ZIP 都解压到**同一个目标目录**，例如 `C:\VR\`。两个压缩包内部都有 `REHUB-Windows-x64` 顶层文件夹，解压后应合并为 `C:\VR\REHUB-Windows-x64\`。**不要接受 Windows 为每个 ZIP 分别创建不同解压文件夹的默认选项。**
+1. 从同一个 [Release 的 Assets](https://github.com/painfulmoments/Grounding_demo/releases/tag/v1.0.1) 下载上面两个文件；也可下载同页的 `Extract-REHUB.cmd` 解压助手和 `SHA256SUMS.txt` 校验表。
+2. 推荐将两个 ZIP 与解压助手放在同一文件夹，双击 `Extract-REHUB.cmd` 完成校验和解压；手动操作时，将两个 ZIP 都解压到**同一个目标目录**，例如 `C:\VR\`。两个压缩包内部都有 `REHUB-Windows-x64` 顶层文件夹，解压后应合并为 `C:\VR\REHUB-Windows-x64\`。**不要接受 Windows 为每个 ZIP 分别创建不同解压文件夹的默认选项。**
 3. 在电脑打开 **Meta Horizon Link**，连接 Quest 3，并在头显里进入 **Link**。
 4. 在合并后的 `REHUB-Windows-x64` 文件夹里双击 **`Launch-REHUB.exe`**，选择中文或英文、当前电脑的录音麦克风和声音输出设备后启动。
 5. 启动体验，等待数字人说完欢迎语，再开始回答。
@@ -36,6 +46,7 @@ Windows Shipping 程序已启动并完成场景画面核对；完整的打包版
 | 项目 | 当前发布范围 |
 |---|---|
 | 程序 | Windows x64 PC VR 可执行程序 |
+| 磁盘空间 | 建议预留 **8 GB**，用于下载文件和完整解压；不是最低硬件测定值 |
 | 开发阶段实测头显 | Meta Quest 3 与 Touch 手柄 |
 | 开发阶段实测连接 | 有线 Meta Horizon Link / Quest Link |
 | 其他头显、Air Link | 本版本未验证 |
@@ -71,6 +82,14 @@ Windows Shipping 程序已启动并完成场景画面核对；完整的打包版
 
 REHUB 是研究与作品展示原型，尚未经过作为医疗治疗手段的临床验证。
 
+## 验证记录
+
+[构建与验证记录](docs/BUILD_AND_VALIDATION.md)区分编译、解压、桌面画面、语音 API 短请求与头显实测。v1.0.1 更新文档与发布包装，沿用 v1.0.0 的游戏二进制和资源；本次没有新增完整 VR 测试。
+
 ## 使用范围与致谢
 
 允许下载并运行此试玩版，用于个人体验、教学或项目评估。作者自有内容的其他权利保留；第三方资产与运行时组件仍适用原权利人的条款，详见 [第三方说明](docs/THIRD_PARTY_NOTICES.md)。公开下载不代表开放全部源码或授权提取、复用其中的资产。
+
+## 相关项目
+
+[Lockdown：Breakout](https://github.com/painfulmoments/lockdown_breakout) 是使用 Unity / OpenXR 制作的双层关卡 VR 恐怖逃脱原型。

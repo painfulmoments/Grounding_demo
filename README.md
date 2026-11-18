@@ -2,11 +2,17 @@
 
 **A conversational digital human guides a five-stage grounding exercise in an immersive forest and waterfall environment.**
 
-[Download the Windows demo](https://github.com/painfulmoments/Grounding_demo/releases/latest) · [English setup guide](docs/PLAY_EN.md) · [中文主页](README.zh-CN.md) · [中文试玩说明](docs/PLAY_ZH.md)
+**Unreal Engine 5.7 · Windows PC VR / OpenXR · English / Chinese**
 
-**Ready to try:** speech and AI dialogue use an **author-provided demonstration service**. No personal cloud account or API-key entry is required. Internet access and a compatible PC VR setup are required; this is not a standalone Quest app.
+[Download the Windows demo](https://github.com/painfulmoments/Grounding_demo/releases/tag/v1.0.1) · [English setup guide](docs/PLAY_EN.md) · [中文主页](README.zh-CN.md) · [中文试玩说明](docs/PLAY_ZH.md)
 
 ![REHUB grounding project teaser](docs/images/Teaser.jpg)
+
+*The teaser illustrates the wider research framework. This download offers the guided digital-human grounding experience, without all research-condition switches or biosignal acquisition.*
+
+**Release status:** Windows build, desktop scene and launcher checks passed; a complete packaged Quest Link conversation remains **unverified**. [Validation record](docs/BUILD_AND_VALIDATION.md).
+
+**Play requirements:** speech and AI dialogue use an **author-provided demonstration service**. No personal cloud account or API-key entry is required. Internet access and a compatible PC VR setup are required; this is not a standalone Quest app.
 
 REHUB combines a structured exercise with spoken interaction, AI-assisted responses, a digital human with speech-driven facial animation, natural idle and speaking motion, and gentle gaze following. The experience moves through visual observation, sound awareness, cognitive grounding, guided breathing, and closing body awareness.
 
@@ -16,11 +22,15 @@ This public repository distributes a **playable build and documentation**. It do
 
 **Download BOTH ZIPs from the same Release and extract BOTH to the same destination. Neither ZIP is playable on its own.**
 
-- [Runtime ZIP — REHUB-Windows-x64-v1.0.0-Runtime.zip](https://github.com/painfulmoments/Grounding_demo/releases/latest/download/REHUB-Windows-x64-v1.0.0-Runtime.zip)
-- [Game data ZIP — REHUB-Windows-x64-v1.0.0-GameData.zip](https://github.com/painfulmoments/Grounding_demo/releases/latest/download/REHUB-Windows-x64-v1.0.0-GameData.zip)
+| File | Size / purpose |
+| --- | --- |
+| [Runtime ZIP](https://github.com/painfulmoments/Grounding_demo/releases/download/v1.0.1/REHUB-Windows-x64-v1.0.1-Runtime.zip) | About 306 MiB, required |
+| [GameData ZIP](https://github.com/painfulmoments/Grounding_demo/releases/download/v1.0.1/REHUB-Windows-x64-v1.0.1-GameData.zip) | About 1.80 GiB, required |
+| [Extract-REHUB.cmd](https://github.com/painfulmoments/Grounding_demo/releases/download/v1.0.1/Extract-REHUB.cmd) | Optional: verifies and extracts both ZIPs |
+| [SHA256SUMS.txt](https://github.com/painfulmoments/Grounding_demo/releases/download/v1.0.1/SHA256SUMS.txt) | Optional: manual integrity verification |
 
-1. Download both files above from [Release Assets](https://github.com/painfulmoments/Grounding_demo/releases/latest).
-2. Extract both ZIPs to **one destination**, for example `C:\VR\`. Both contain the same top-level `REHUB-Windows-x64` folder, so their contents must merge into `C:\VR\REHUB-Windows-x64\`. **Do not accept Windows' default of a different extraction folder for each ZIP.**
+1. Download both ZIPs, plus optional `Extract-REHUB.cmd` and `SHA256SUMS.txt`, from [Release Assets](https://github.com/painfulmoments/Grounding_demo/releases/tag/v1.0.1).
+2. Recommended: put both ZIPs and the helper together and run `Extract-REHUB.cmd` to verify and extract. For manual extraction, extract both ZIPs to **one destination**, for example `C:\VR\`. Both contain the same top-level `REHUB-Windows-x64` folder, so their contents must merge into `C:\VR\REHUB-Windows-x64\`. **Do not accept Windows' default of a different extraction folder for each ZIP.**
 3. Connect your Quest 3 to your Windows PC, open **Meta Horizon Link**, and enter **Link inside the headset**.
 4. Double-click **`Launch-REHUB.exe`** inside the merged `REHUB-Windows-x64` folder. Select your dialogue language, microphone, and audio output, then launch the experience.
 5. Start the experience and wait for the digital human's welcome message to finish.
@@ -38,6 +48,7 @@ The Windows Shipping build has been launched and its scene visually reviewed. A 
 | Item | Release information |
 |---|---|
 | Application | Windows x64 PC VR executable |
+| Free disk space | Allow **8 GB** for downloads and extraction; a suggested margin, not a measured hardware minimum |
 | Development-tested headset | Meta Quest 3 with Touch controllers |
 | Development-tested connection | Wired Meta Horizon Link / Quest Link |
 | Other headsets and Air Link | Not verified for this release |
@@ -77,6 +88,14 @@ The exercise combines local progression rules with AI-generated conversational r
 
 REHUB is a research and portfolio prototype and has not been clinically validated as a medical treatment.
 
+## Validation
+
+The [build and validation record](docs/BUILD_AND_VALIDATION.md) separates packaging, extraction, desktop launch, short cloud API checks and headset testing. v1.0.1 updates the documentation and packaging while retaining the v1.0.0 game binaries and data. No new full VR test was performed for this update.
+
 ## Use and acknowledgments
 
 You may download and run the demo for personal, educational, or project-evaluation purposes. All other rights in the author-owned portions are reserved. Third-party assets and runtime components retain their respective ownership and terms; see [Third-party notices](docs/THIRD_PARTY_NOTICES.md). Public availability of the demo does not grant a source-code or asset-reuse license.
+
+## Related project
+
+[Lockdown：Breakout](https://github.com/painfulmoments/lockdown_breakout) is a Unity / OpenXR horror escape prototype with a two-floor environment.

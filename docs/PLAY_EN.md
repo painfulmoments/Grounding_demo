@@ -1,6 +1,6 @@
 # Play REHUB on Windows with Quest 3
 
-[Download](https://github.com/painfulmoments/Grounding_demo/releases/latest) · [Project overview](../README.md) · [中文说明](PLAY_ZH.md)
+[Download](https://github.com/painfulmoments/Grounding_demo/releases/tag/v1.0.1) · [Project overview](../README.md) · [中文说明](PLAY_ZH.md)
 
 ## 1. Check the setup
 
@@ -18,12 +18,12 @@ The development test PC used Windows 11, an RTX 5070 Laptop GPU with 8 GB VRAM, 
 
 ## 2. Download the playable package
 
-**Download BOTH ZIPs from the same Release. Extract BOTH to the same destination folder.**
+**Download BOTH ZIPs from the same Release. Extract BOTH to the same destination folder.** Runtime is about **306 MiB**, GameData about **1.80 GiB**. Allow **8 GB** of free space for the downloads and extracted files.
 
-Open the [latest Release](https://github.com/painfulmoments/Grounding_demo/releases/latest). Under **Assets**, download:
+Open the [v1.0.1 Release](https://github.com/painfulmoments/Grounding_demo/releases/tag/v1.0.1). Under **Assets**, download:
 
-- **`REHUB-Windows-x64-v1.0.0-Runtime.zip`**
-- **`REHUB-Windows-x64-v1.0.0-GameData.zip`**
+- **`REHUB-Windows-x64-v1.0.1-Runtime.zip`**
+- **`REHUB-Windows-x64-v1.0.1-GameData.zip`**
 
 These are two independent ZIP archives, not split 7-Zip volumes. Both are required. No 7-Zip installation is needed.
 
@@ -42,7 +42,7 @@ Download **`Extract-REHUB.cmd`** from the same Release. Place it in a folder alo
 
 **GitHub's “Source code” archives are not the playable package.** Keep the extracted executable, libraries, and content folders together. Do not run the program from inside the archive or move only the EXE to another folder.
 
-Unreal Editor and Visual Studio are not needed. If Windows reports a missing Visual C++ runtime, install the prerequisite provided with the release, if present, or use Microsoft's [official x64 Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist). Use the release's included runtime files rather than copying DLLs from unrelated software.
+Unreal Editor and Visual Studio are not needed. If Windows reports a missing Visual C++ runtime, run the included `Engine/Extras/Redist/en-us/vc_redist.x64.exe` installer or use Microsoft's [official x64 Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist). Use the release's included runtime files rather than copying DLLs from unrelated software.
 
 ## 3. Online service access and privacy
 
@@ -97,3 +97,5 @@ Speech recognition, hardware input, and cloud availability cannot be guaranteed 
 REHUB is a research and portfolio prototype and has not been clinically validated as a medical treatment.
 
 [Third-party notices and use of the demo](THIRD_PARTY_NOTICES.md)
+
+[Build and validation record](BUILD_AND_VALIDATION.md) · [Report an issue](https://github.com/painfulmoments/Grounding_demo/issues)
