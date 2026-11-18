@@ -1,10 +1,10 @@
 # Play REHUB on Windows with Quest 3
 
-[Download](https://github.com/painfulmoments/REHUB-Demo/releases/latest) · [Project overview](../README.md) · [中文说明](PLAY_ZH.md)
+[Download](https://github.com/painfulmoments/Grounding_demo/releases/latest) · [Project overview](../README.md) · [中文说明](PLAY_ZH.md)
 
 ## 1. Check the setup
 
-This release is a **Windows x64 PC VR application**. Development/editor testing used **Meta Quest 3, Touch controllers, and wired Meta Horizon Link**; this first packaged release has not yet completed a full headset playthrough. It is not an APK installed on the headset. Other headsets and Air Link are unverified for this release.
+This release is a **Windows x64 PC VR application**. Development/editor testing used **Meta Quest 3, Touch controllers, and wired Meta Horizon Link**. The Windows Shipping build has been launched and its scene visually reviewed, but a full packaged headset/cloud conversation playthrough remains pending. It is not an APK installed on the headset. Other headsets and Air Link are unverified for this release.
 
 You need:
 
@@ -12,7 +12,7 @@ You need:
 - Meta Horizon Link installed on the PC, a connected Quest 3, and its controllers.
 - A working Windows microphone. A PC microphone is a valid choice; headset microphones do not work reliably on every Link setup.
 - Headphones for playback, or a sufficiently quiet setup to keep game audio out of the microphone.
-- Internet access, an enabled Alibaba Cloud Intelligent Speech Interaction account, and a DeepSeek API account for the cloud-enabled dialogue.
+- Internet access to the author-provided demonstration speech and AI service. No separate cloud-account registration or API-key entry is required.
 
 The development test PC used Windows 11, an RTX 5070 Laptop GPU with 8 GB VRAM, and 32 GB RAM. This is a reference test configuration, not a validated minimum specification.
 
@@ -20,7 +20,7 @@ The development test PC used Windows 11, an RTX 5070 Laptop GPU with 8 GB VRAM, 
 
 **Download BOTH ZIPs from the same Release. Extract BOTH to the same destination folder.**
 
-Open the [latest Release](https://github.com/painfulmoments/REHUB-Demo/releases/latest). Under **Assets**, download:
+Open the [latest Release](https://github.com/painfulmoments/Grounding_demo/releases/latest). Under **Assets**, download:
 
 - **`REHUB-Windows-x64-v1.0.0-Runtime.zip`**
 - **`REHUB-Windows-x64-v1.0.0-GameData.zip`**
@@ -44,31 +44,13 @@ Download **`Extract-REHUB.cmd`** from the same Release. Place it in a folder alo
 
 Unreal Editor and Visual Studio are not needed. If Windows reports a missing Visual C++ runtime, install the prerequisite provided with the release, if present, or use Microsoft's [official x64 Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist). Use the release's included runtime files rather than copying DLLs from unrelated software.
 
-## 3. Prepare the cloud credentials
+## 3. Online service access and privacy
 
-The public demo uses your own cloud accounts. No shared service key is included. Prepare these values for the launcher:
+The author provides the demonstration speech and AI service. You only need to select the dialogue language, microphone, and audio output in the launcher, then start the experience. There is no cloud-account registration or manual API-key setup for ordinary play.
 
-| Launcher value | Purpose |
-|---|---|
-| Alibaba Cloud AccessKey ID | Account authentication for the speech service |
-| Alibaba Cloud AccessKey Secret | The matching secret for that AccessKey ID |
-| Alibaba Cloud NLS AppKey | Speech-service project identifier |
-| English recognition AppKey, when used | A separate NLS project for English speech recognition |
-| DeepSeek API key | AI-assisted conversational replies |
+An internet connection is required. Availability and usage capacity depend on the author's accounts, quotas, and upstream service status. The demo does not promise permanent access, unlimited usage, or a permanently free online service. If an online feature is unavailable, check your connection, try again later, or report the issue.
 
-### Alibaba Cloud speech
-
-Activate Intelligent Speech Interaction, create an NLS project, and obtain its AppKey. Select and **publish** the recognition configuration that matches the language you will speak. Each AppKey identifies a project and its cloud configuration. See [Alibaba Cloud's project setup instructions](https://help.aliyun.com/en/isi/getting-started/manage-projects).
-
-For English recognition, use a published general-English model for **16 kHz** audio. If the launcher is configured with a separate English-recognition AppKey, it must point to that English project. Changing REHUB's dialogue language does **not** change the cloud ASR model: the ASR language and scenario are selected in the NLS console, not in the recognition request. See the [official one-sentence recognition API](https://help.aliyun.com/zh/isi/user-guide/restful-api-2).
-
-The English speech voice used by this project is **`cally`**, documented as an American English voice supporting 16 kHz synthesis. Voice availability depends on the service account and configuration. See the [official voice table](https://help.aliyun.com/en/isi/user-guide/overview-of-speech-synthesis).
-
-### DeepSeek
-
-Obtain a key from the [DeepSeek platform](https://platform.deepseek.com/) and enter it in the launcher. The launcher defaults to **`deepseek-flash`** and allows you to change the model. Model names and service availability can change; if a model is rejected, check the [official model list](https://api-docs.deepseek.com/api/list-models/) and [API setup guide](https://api-docs.deepseek.com/quick_start/) for a model currently supported by your account.
-
-The cloud services can charge your accounts. Microphone audio is sent to Alibaba Cloud for recognition; the dialogue path can send recognized text and exercise context to DeepSeek; assistant text is sent to Alibaba Cloud for speech synthesis. Enter credentials only in the local setup. Do not include them in public screenshots or issue reports.
+Microphone audio is sent to Alibaba Cloud for recognition. The dialogue path can send recognized text and exercise context to DeepSeek, and assistant text is sent to Alibaba Cloud for speech synthesis. Use the demo only if you are comfortable sending this information to these services.
 
 ## 4. Connect Link, configure, and launch
 
@@ -76,7 +58,7 @@ The cloud services can charge your accounts. Microphone audio is sent to Alibaba
 2. Put on the headset and enter **Link**. Confirm that you can see the Link environment.
 3. On the PC, double-click **`Launch-REHUB.cmd`** in the extracted demo folder.
 4. Select **Chinese** or **English**, the actual microphone you intend to use, and the output device you will listen through.
-5. Enter your cloud credentials and start the experience.
+5. Start the experience; no cloud credentials need to be entered.
 6. Return to the headset and wait for the welcome message to finish before answering.
 
 Select devices from **this computer's** list. Device numbers and endpoint identifiers from the development PC do not identify the same hardware on another PC. If you change the language or microphone after launching the game, close the game and start it again with the updated launcher selection.
@@ -102,15 +84,15 @@ Answer the question you actually hear. When asked to observe something or take a
 | Symptom | What to check |
 |---|---|
 | Still in the Link room | Confirm Link is connected and the Windows game is running. Verify that Meta Horizon Link is the active OpenXR runtime, then reconnect Link and relaunch the game if needed. |
-| No welcome voice | Check the selected output device and its volume. Then check NLS activation, credentials, project configuration, and network access. |
+| No welcome voice | Check the selected output device and its volume. Check network access as well. If the online demonstration service is unavailable, try again later or report the issue. |
 | The digital human does not hear you | Confirm the launcher selected the microphone you are speaking into. Check its Windows input level. Try the PC microphone if the Quest input has no signal. |
 | A reply seems unrelated | The recognizer may have misheard the answer. Let the digital human finish, then record one short, clear answer again. |
 | A question is repeated | Complete the requested step and state completion clearly. Avoid rapidly clicking A or talking over the digital human. |
-| Cloud authentication or model error | Recheck the credentials, project activation, published ASR language, account access, and current model availability. |
+| Online speech or AI service unavailable | Check your internet connection, retry later, or report the issue. Service access depends on the author's account quotas and upstream availability. |
 | Stuttering | Test with screen recording turned off. Close unnecessary GPU-heavy applications and review Link's graphics settings; performance varies with PC hardware. |
 | A DLL, game data, or prerequisite is missing | Confirm that both ZIPs were extracted to the same destination and merged into one `REHUB-Windows-x64` folder. Install the included prerequisites or Microsoft's official x64 runtime if needed. |
 
-Speech recognition, hardware input, and cloud availability cannot be guaranteed on every PC. If you report a problem in [Issues](https://github.com/painfulmoments/REHUB-Demo/issues), include the Windows version, GPU, headset, Link connection type, and reproduction steps. Remove credentials from attachments.
+Speech recognition, hardware input, and cloud availability cannot be guaranteed on every PC. If you report a problem in [Issues](https://github.com/painfulmoments/Grounding_demo/issues), include the Windows version, GPU, headset, Link connection type, and reproduction steps. Avoid including private personal information in attachments.
 
 REHUB is a research and portfolio prototype and has not been clinically validated as a medical treatment.
 

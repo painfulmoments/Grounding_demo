@@ -2,9 +2,9 @@
 
 **在森林与瀑布场景中，与数字人通过语音完成五阶段着陆练习。**
 
-[下载 Windows 试玩版](https://github.com/painfulmoments/REHUB-Demo/releases/latest) · [中文试玩说明](docs/PLAY_ZH.md) · [English](README.md)
+[下载 Windows 试玩版](https://github.com/painfulmoments/Grounding_demo/releases/latest) · [中文试玩说明](docs/PLAY_ZH.md) · [English](README.md)
 
-**下载前请确认：** 完整语音与 AI 对话需要**自己的阿里云 NLS 和 DeepSeek 凭据**、网络连接，以及可运行 PC VR 的设备。这不是免凭据体验，也不是 Quest 独立应用。
+**打开即可体验：** 语音与 AI 对话由**作者提供的演示云服务**支持，无需注册个人云账户或填写 API Key。仍需联网和可运行 PC VR 的设备；这不是 Quest 独立应用。
 
 ![REHUB 场景中的数字人、森林与瀑布](docs/images/rehub-vr.png)
 
@@ -16,13 +16,13 @@ REHUB 将视觉观察、声音觉察、认知着陆、呼吸调节和结束整�
 
 **两个 ZIP 都要下载，并解压到同一个目标目录。少一个就无法构成完整试玩程序。**
 
-- [运行程序包：REHUB-Windows-x64-v1.0.0-Runtime.zip](https://github.com/painfulmoments/REHUB-Demo/releases/latest/download/REHUB-Windows-x64-v1.0.0-Runtime.zip)
-- [游戏资源包：REHUB-Windows-x64-v1.0.0-GameData.zip](https://github.com/painfulmoments/REHUB-Demo/releases/latest/download/REHUB-Windows-x64-v1.0.0-GameData.zip)
+- [运行程序包：REHUB-Windows-x64-v1.0.0-Runtime.zip](https://github.com/painfulmoments/Grounding_demo/releases/latest/download/REHUB-Windows-x64-v1.0.0-Runtime.zip)
+- [游戏资源包：REHUB-Windows-x64-v1.0.0-GameData.zip](https://github.com/painfulmoments/Grounding_demo/releases/latest/download/REHUB-Windows-x64-v1.0.0-GameData.zip)
 
-1. 从同一个 [Release 的 Assets](https://github.com/painfulmoments/REHUB-Demo/releases/latest) 下载上面两个文件。
+1. 从同一个 [Release 的 Assets](https://github.com/painfulmoments/Grounding_demo/releases/latest) 下载上面两个文件。
 2. 将两个 ZIP 都解压到**同一个目标目录**，例如 `C:\VR\`。两个压缩包内部都有 `REHUB-Windows-x64` 顶层文件夹，解压后应合并为 `C:\VR\REHUB-Windows-x64\`。**不要接受 Windows 为每个 ZIP 分别创建不同解压文件夹的默认选项。**
 3. 在电脑打开 **Meta Horizon Link**，连接 Quest 3，并在头显里进入 **Link**。
-4. 在合并后的 `REHUB-Windows-x64` 文件夹里双击 **`Launch-REHUB.cmd`**，选择中文或英文、当前电脑的录音麦克风和声音输出设备，填写自己的云服务凭据。
+4. 在合并后的 `REHUB-Windows-x64` 文件夹里双击 **`Launch-REHUB.cmd`**，选择中文或英文、当前电脑的录音麦克风和声音输出设备后启动。
 5. 启动体验，等待数字人说完欢迎语，再开始回答。
 
 也可从同一 Release 下载 **`Extract-REHUB.cmd`**，与两个 ZIP 放在一起双击，由它在本地完成解压。它不会下载或安装软件。这里是**两个独立 ZIP**，不是 7z 分卷，不需要安装 7-Zip。
@@ -31,7 +31,7 @@ REHUB 将视觉观察、声音觉察、认知着陆、呼吸调节和结束整�
 
 ## 设备与依赖
 
-下表设备信息来自开发阶段的编辑器现场测试；首次打包版本尚未完成完整的头显试玩验证。
+Windows Shipping 程序已启动并完成场景画面核对；完整的打包版头显云端对话仍待验证。下表设备信息来自开发阶段的编辑器现场测试。
 
 | 项目 | 当前发布范围 |
 |---|---|
@@ -41,7 +41,7 @@ REHUB 将视觉观察、声音觉察、认知着陆、呼吸调节和结束整�
 | 其他头显、Air Link | 本版本未验证 |
 | Quest 独立运行 / Android APK | 不提供；程序运行在 Windows 电脑上 |
 | 麦克风 | 电脑上实际可用的录音输入，在启动器中选择 |
-| 云端语音与 AI | 需要联网及试玩者自己的阿里云 NLS、DeepSeek 凭据 |
+| 云端语音与 AI | 需要联网，作者提供演示云服务 |
 | 对话语言 | 启动前选择中文或英文 |
 
 电脑需满足 [Meta Horizon Link 的要求](https://www.meta.com/help/quest/140991407990979/)。开发实测设备为 Windows 11 x64、RTX 5070 Laptop GPU（8 GB 显存）、32 GB 内存；**这是实测配置，不是经过测定的最低配置**。
@@ -57,15 +57,17 @@ REHUB 将视觉观察、声音觉察、认知着陆、呼吸调节和结束整�
 
 **A 不用按住。** 等数字人说完后开始录音，说完一句再提交；观察和呼吸动作应先完成，再回答已经完成。
 
-## 云服务配置与隐私
+## 演示云服务与隐私
 
-当前试玩版使用**自备凭据**模式，不提供共享的公开 API Key 或免费托管的 AI 服务。启动器需要阿里云 AccessKey ID、AccessKey Secret、NLS 项目 AppKey，以及 DeepSeek API Key；使用独立英文识别项目时，可另填英文识别 AppKey。
+语音识别、语音合成和 AI 辅助对话使用作者提供的演示云服务。试玩者选择语言和音频设备后即可启动，无需另行注册云账户或填写 API Key。
 
-录音会提交给阿里云进行语音识别；对话路径可能将识别文字和练习上下文发送给 DeepSeek，回复文本会提交给阿里云合成语音。服务费用由试玩者自己的云账户承担。凭据只在本机配置，不要放进公开 Issue 或截图。
+服务需要联网。可用性和可用额度取决于作者账户、服务配额及上游服务状态，不承诺永久免费、无限使用或永久在线。
+
+录音会提交给阿里云进行语音识别；对话路径可能将识别文字和练习上下文发送给 DeepSeek，回复文本会提交给阿里云合成语音。请在接受这些信息会发送到相关云服务的前提下使用。
 
 这套体验结合本地流程规则和 AI 对话回复，不是无限制聊天机器人，也不是每一句引导语都由 AI 即时生成。
 
-详细设置与常见问题请看 **[中文试玩说明](docs/PLAY_ZH.md)**。反馈问题时请提供头显、连接方式、Windows 版本、显卡和复现步骤，并移除附件中的凭据。
+详细设置与常见问题请看 **[中文试玩说明](docs/PLAY_ZH.md)**。反馈问题时请提供头显、连接方式、Windows 版本、显卡和复现步骤，请勿在附件中包含个人隐私信息。
 
 REHUB 是研究与作品展示原型，尚未经过作为医疗治疗手段的临床验证。
 

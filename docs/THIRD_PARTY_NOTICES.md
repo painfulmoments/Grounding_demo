@@ -41,7 +41,7 @@ The Boost DLLs and Convai runtime retain their applicable original terms. This s
 
 ## External services
 
-Alibaba Cloud Intelligent Speech Interaction and the DeepSeek API are external services used for the cloud-enabled dialogue. Their services, account requirements, billing, and data-processing terms are provided by their respective operators. No ownership of these services or endorsement by their operators is claimed.
+Alibaba Cloud Intelligent Speech Interaction and the DeepSeek API are external services used for the cloud-enabled dialogue. The author provides demonstration access; ordinary players do not need separate cloud accounts or manual API-key setup. Access depends on the author's account quotas and upstream availability, and permanent or unlimited service is not promised. Microphone audio and dialogue-related text are processed by these services as described in the play guides. No ownership of these services or endorsement by their operators is claimed.
 
 Meta Quest and Meta Horizon Link are device and software names belonging to their respective rights holders. REHUB is an independent project.
 
