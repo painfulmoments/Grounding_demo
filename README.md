@@ -6,7 +6,7 @@
 
 **Ready to try:** speech and AI dialogue use an **author-provided demonstration service**. No personal cloud account or API-key entry is required. Internet access and a compatible PC VR setup are required; this is not a standalone Quest app.
 
-![The REHUB digital human in the forest and waterfall scene](docs/images/rehub-vr.png)
+![REHUB grounding project teaser](docs/images/Teaser.jpg)
 
 REHUB combines a structured exercise with spoken interaction, AI-assisted responses, a digital human with speech-driven facial animation, natural idle and speaking motion, and gentle gaze following. The experience moves through visual observation, sound awareness, cognitive grounding, guided breathing, and closing body awareness.
 
