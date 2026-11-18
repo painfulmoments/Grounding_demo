@@ -32,7 +32,7 @@ These are two independent ZIP archives, not split 7-Zip volumes. Both are requir
 1. Create or choose one destination, for example **`C:\VR\`**.
 2. Extract the Runtime ZIP to **`C:\VR\`**.
 3. Extract the GameData ZIP to the **same `C:\VR\` destination**, allowing their common `REHUB-Windows-x64` folder to merge.
-4. Open **`C:\VR\REHUB-Windows-x64\`** and use **`Launch-REHUB.cmd`** there.
+4. Open **`C:\VR\REHUB-Windows-x64\`** and use **`Launch-REHUB.exe`** there.
 
 **Windows may suggest a separate destination named after each ZIP. Change both destinations to the same folder.** Do not leave the runtime and game data in two separate package-named folders, and do not move only the launcher or EXE out of the merged directory.
 
@@ -56,7 +56,7 @@ Microphone audio is sent to Alibaba Cloud for recognition. The dialogue path can
 
 1. Open **Meta Horizon Link** on the PC and connect your Quest 3. Follow [Meta's Link setup guide](https://www.meta.com/help/quest/509273027107091/) if this is your first connection.
 2. Put on the headset and enter **Link**. Confirm that you can see the Link environment.
-3. On the PC, double-click **`Launch-REHUB.cmd`** in the extracted demo folder.
+3. On the PC, double-click **`Launch-REHUB.exe`** in the extracted demo folder.
 4. Select **Chinese** or **English**, the actual microphone you intend to use, and the output device you will listen through.
 5. Start the experience; no cloud credentials need to be entered.
 6. Return to the headset and wait for the welcome message to finish before answering.

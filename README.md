@@ -22,7 +22,7 @@ This public repository distributes a **playable build and documentation**. It do
 1. Download both files above from [Release Assets](https://github.com/painfulmoments/Grounding_demo/releases/latest).
 2. Extract both ZIPs to **one destination**, for example `C:\VR\`. Both contain the same top-level `REHUB-Windows-x64` folder, so their contents must merge into `C:\VR\REHUB-Windows-x64\`. **Do not accept Windows' default of a different extraction folder for each ZIP.**
 3. Connect your Quest 3 to your Windows PC, open **Meta Horizon Link**, and enter **Link inside the headset**.
-4. Double-click **`Launch-REHUB.cmd`** inside the merged `REHUB-Windows-x64` folder. Select your dialogue language, microphone, and audio output, then launch the experience.
+4. Double-click **`Launch-REHUB.exe`** inside the merged `REHUB-Windows-x64` folder. Select your dialogue language, microphone, and audio output, then launch the experience.
 5. Start the experience and wait for the digital human's welcome message to finish.
 
 Optional: download **`Extract-REHUB.cmd`** from the same Release, put it beside both ZIPs, and double-click it to extract them locally. The helper does not download or install software. These are **two independent ZIP archives**, not 7-Zip volumes; no 7-Zip installation is needed.

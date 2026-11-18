@@ -22,7 +22,7 @@ REHUB 将视觉观察、声音觉察、认知着陆、呼吸调节和结束整�
 1. 从同一个 [Release 的 Assets](https://github.com/painfulmoments/Grounding_demo/releases/latest) 下载上面两个文件。
 2. 将两个 ZIP 都解压到**同一个目标目录**，例如 `C:\VR\`。两个压缩包内部都有 `REHUB-Windows-x64` 顶层文件夹，解压后应合并为 `C:\VR\REHUB-Windows-x64\`。**不要接受 Windows 为每个 ZIP 分别创建不同解压文件夹的默认选项。**
 3. 在电脑打开 **Meta Horizon Link**，连接 Quest 3，并在头显里进入 **Link**。
-4. 在合并后的 `REHUB-Windows-x64` 文件夹里双击 **`Launch-REHUB.cmd`**，选择中文或英文、当前电脑的录音麦克风和声音输出设备后启动。
+4. 在合并后的 `REHUB-Windows-x64` 文件夹里双击 **`Launch-REHUB.exe`**，选择中文或英文、当前电脑的录音麦克风和声音输出设备后启动。
 5. 启动体验，等待数字人说完欢迎语，再开始回答。
 
 也可从同一 Release 下载 **`Extract-REHUB.cmd`**，与两个 ZIP 放在一起双击，由它在本地完成解压。它不会下载或安装软件。这里是**两个独立 ZIP**，不是 7z 分卷，不需要安装 7-Zip。

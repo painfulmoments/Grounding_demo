@@ -1,5 +1,9 @@
 @echo off
 setlocal
-"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoLogo -NoProfile -STA -WindowStyle Normal -ExecutionPolicy Bypass -File "%~dp0Launch-REHUB.ps1"
-if errorlevel 1 pause
+if not exist "%~dp0Launch-REHUB.exe" (
+  echo Launch-REHUB.exe is missing. Extract the complete Windows demo first.
+  pause
+  exit /b 1
+)
+start "" "%~dp0Launch-REHUB.exe"
 endlocal
