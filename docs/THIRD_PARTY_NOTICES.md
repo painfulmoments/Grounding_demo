@@ -20,6 +20,25 @@ This permission does not replace the terms that apply to third-party components.
 
 The package may contain runtime libraries or model files required by these components. Their inclusion is not a separate license to reuse the source code, model, character, environment, or audio asset in another project.
 
+## Included license texts
+
+The following original license texts are included in this release. These notices cover the named components and do not replace other applicable third-party terms.
+
+| Component | Original license text | Match used for this release |
+|---|---|---|
+| ONNX Runtime 1.20 | [MIT license](licenses/ONNXRuntime_v1.20.license) | The Unreal Engine NNERuntimeORT dependency identifies ONNX Runtime 1.20 and its supplied license. |
+| libfvad / WebRTC voice activity detection code | [BSD license](licenses/libfvad-LICENSE.txt) | Supplied with the libfvad source compiled by Runtime Audio Importer. This is not a complete license inventory for Convai's WebRTC runtime. |
+| OpenCV 4.5.5 | [Apache 2.0 license](licenses/OpenCV_v4.5.5.license) | Included `opencv_world455.dll`, file version 4.5.5. |
+| OpenXR SDK loader | [Apache 2.0 license](licenses/OpenXR-SDK.txt) | Included OpenXR loader and the Unreal Engine OpenXR SDK dependency's supplied license. |
+| oneTBB 2021.13.0 | [Apache 2.0 license](licenses/oneTBB_LICENSE.txt) | Included `tbb12.dll`, file version 2021.13.0, matches the supplied oneTBB license. |
+| Ogg / Vorbis audio codecs | [BSD license](licenses/OggVorbis1.2.0_License.txt) | The Unreal Engine Ogg/Vorbis dependency metadata explicitly identifies this combined license file. |
+
+The Boost DLLs and Convai runtime retain their applicable original terms. This selected list does not claim to be a complete inventory of every dependency inside those runtimes.
+
+### 随包许可原文
+
+上表链接为随包保留的原始许可文本。libfvad 的许可不代表完整覆盖 Convai WebRTC 的所有依赖；其他第三方组件仍适用各自原有条款。
+
 ## External services
 
 Alibaba Cloud Intelligent Speech Interaction and the DeepSeek API are external services used for the cloud-enabled dialogue. Their services, account requirements, billing, and data-processing terms are provided by their respective operators. No ownership of these services or endorsement by their operators is claimed.
