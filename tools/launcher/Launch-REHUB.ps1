@@ -1,0 +1,322 @@
+﻿#requires -Version 5.1
+param([switch]$ValidateOnly)
+
+$ErrorActionPreference = 'Stop'
+$script:ApplicationRoot = $PSScriptRoot
+$script:SettingsPath = Join-Path $env:LOCALAPPDATA 'REHUBDemo\Config\Game.ini'
+$script:LanguageSection = '/Script/REHUB.REHUBLanguageSettings'
+
+function Get-IniSettings {
+    param([string]$Path)
+    $settings = @{}
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) { return $settings }
+    $section = ''
+    foreach ($line in [IO.File]::ReadAllLines($Path, [Text.Encoding]::UTF8)) {
+        $trimmed = $line.Trim()
+        if (-not $trimmed -or $trimmed.StartsWith(';') -or $trimmed.StartsWith('#')) { continue }
+        if ($trimmed -match '^\[([^\]]+)\]$') { $section = $Matches[1]; continue }
+        $separator = $trimmed.IndexOf('=')
+        if ($separator -lt 1) { continue }
+        $key = $trimmed.Substring(0, $separator).Trim()
+        $value = $trimmed.Substring($separator + 1).Trim()
+        if ($value.Length -ge 2 -and $value.StartsWith('"') -and $value.EndsWith('"')) {
+            $value = $value.Substring(1, $value.Length - 2)
+        }
+        $settings[($section + '|' + $key)] = $value
+    }
+    return $settings
+}
+
+function Get-SettingValue {
+    param([hashtable]$Settings, [string]$Section, [string]$Key, [string]$Default = '')
+    $lookup = $Section + '|' + $Key
+    if ($Settings.ContainsKey($lookup)) { return [string]$Settings[$lookup] }
+    return $Default
+}
+
+function ConvertTo-IniString {
+    param([AllowEmptyString()][string]$Value)
+    # Double-quote each INI value so URLs are not truncated at //.
+    if ($Value -match '[\x00-\x1F\x7F"]') {
+        throw 'A setting contains a quote or control character. Remove it and try again.'
+    }
+    return '"' + $Value.Trim() + '"'
+}
+
+function New-GameIni {
+    param([hashtable]$Values)
+    $q = @{}
+    foreach ($key in $Values.Keys) { $q[$key] = ConvertTo-IniString ([string]$Values[$key]) }
+    return @"
+; REHUB demo settings. This local file contains your credentials; do not upload or share it.
+[SectionsToSave]
+bCanSaveAllSections=True
+
+[REHUB.AI]
+AliyunAccessKeyId=$($q.AliyunAccessKeyId)
+AliyunAccessKeySecret=$($q.AliyunAccessKeySecret)
+AliyunAppKey=$($q.AliyunAppKey)
+AliyunRegionId=$($q.AliyunRegionId)
+DeepSeekApiKey=$($q.DeepSeekApiKey)
+DeepSeekModel=$($q.DeepSeekModel)
+DeepSeekApiUrl="https://api.deepseek.com/chat/completions"
+
+[$script:LanguageSection]
+DialogueLanguage=$($Values.DialogueLanguage)
+MicrophoneDeviceId=$($q.MicrophoneDeviceId)
+bAutoSwitchMicrophoneOnNoAudio=True
+EnglishRecognitionAppKey=$($q.EnglishRecognitionAppKey)
+EnglishVoice="cally"
+
+[REHUB.Audio]
+PreferredOutputDeviceNameContains=$($q.PreferredOutputDeviceNameContains)
+"@
+}
+
+function Get-RegistryString {
+    param($Properties, [string]$Name)
+    $property = $Properties.PSObject.Properties[$Name]
+    if ($null -ne $property -and $property.Value -is [string]) { return [string]$property.Value }
+    return ''
+}
+
+function Get-ActiveAudioEndpoints {
+    param([ValidateSet('Capture', 'Render')][string]$Flow)
+    $root = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\MMDevices\Audio\' + $Flow
+    $prefix = if ($Flow -eq 'Capture') { '{0.0.1.00000000}.' } else { '{0.0.0.00000000}.' }
+    if (-not (Test-Path -LiteralPath $root)) { return }
+    foreach ($device in Get-ChildItem -LiteralPath $root) {
+        $state = (Get-ItemProperty -LiteralPath $device.PSPath).DeviceState
+        if ($state -ne 1) { continue }
+        $properties = Get-ItemProperty -LiteralPath (Join-Path $device.PSPath 'Properties')
+        $name = Get-RegistryString $properties '{a45c254e-df1c-4efd-8020-67d146a850e0},14'
+        if (-not $name) {
+            $description = Get-RegistryString $properties '{a45c254e-df1c-4efd-8020-67d146a850e0},2'
+            $adapter = Get-RegistryString $properties '{b3f8fa53-0004-438e-9003-51a46e139bfc},6'
+            if ($description -and $adapter) { $name = "$description ($adapter)" }
+            elseif ($description) { $name = $description }
+            else { $name = $device.PSChildName }
+        }
+        [pscustomobject]@{ Display = $name; Name = $name; Id = ($prefix + $device.PSChildName) }
+    }
+}
+
+function Initialize-AudioDefaultReader {
+    if ('REHUBDemoAudio.DefaultEndpoint' -as [type]) { return }
+    Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+namespace REHUBDemoAudio {
+    [ComImport, Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")] public class Enumerator { }
+    [ComImport, Guid("A95664D2-9614-4F35-A746-DE8DB63617E6"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    public interface IEnumerator {
+        int EnumAudioEndpoints(int flow, uint state, out IntPtr devices);
+        int GetDefaultAudioEndpoint(int flow, int role, out IDevice device);
+        int GetDevice([MarshalAs(UnmanagedType.LPWStr)] string id, out IDevice device);
+    }
+    [ComImport, Guid("D666063F-1587-4E43-81F1-B948E807363F"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    public interface IDevice {
+        int Activate(ref Guid iid, uint context, IntPtr parameters, out IntPtr obj);
+        int OpenPropertyStore(int access, out IntPtr store);
+        int GetId([MarshalAs(UnmanagedType.LPWStr)] out string id);
+        int GetState(out uint state);
+    }
+    public static class DefaultEndpoint {
+        public static string Read(int flow) {
+            IEnumerator enumerator = null; IDevice device = null;
+            try {
+                enumerator = (IEnumerator)new Enumerator();
+                if (enumerator.GetDefaultAudioEndpoint(flow, 0, out device) < 0 || device == null) return "";
+                string id; return device.GetId(out id) < 0 ? "" : id;
+            } catch (COMException) { return ""; }
+            finally {
+                if (device != null) Marshal.ReleaseComObject(device);
+                if (enumerator != null) Marshal.ReleaseComObject(enumerator);
+            }
+        }
+    }
+}
+'@
+}
+
+if ($ValidateOnly) {
+    Initialize-AudioDefaultReader
+    $inputs = @(Get-ActiveAudioEndpoints Capture)
+    $outputs = @(Get-ActiveAudioEndpoints Render)
+    $example = @{
+        AliyunAccessKeyId=''; AliyunAccessKeySecret=''; AliyunAppKey=''; AliyunRegionId='cn-shanghai'
+        DeepSeekApiKey=''; DeepSeekModel='deepseek-flash'; DialogueLanguage='English'
+        MicrophoneDeviceId='default'; EnglishRecognitionAppKey=''; PreferredOutputDeviceNameContains=''
+    }
+    $iniText = New-GameIni $example
+    if ($iniText -notmatch 'DeepSeekApiUrl="https://api\.deepseek\.com/chat/completions"') { throw 'INI URL quoting failed.' }
+    [pscustomobject]@{
+        Valid = $true; ActiveMicrophones = $inputs.Count; ActiveOutputs = $outputs.Count
+        DefaultInputFound = -not [string]::IsNullOrEmpty([REHUBDemoAudio.DefaultEndpoint]::Read(1))
+        DefaultOutputFound = -not [string]::IsNullOrEmpty([REHUBDemoAudio.DefaultEndpoint]::Read(0))
+        ConfigPath = $script:SettingsPath; RecordedAudio = $false; NetworkRequests = $false
+    } | ConvertTo-Json
+    exit 0
+}
+
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+[Windows.Forms.Application]::EnableVisualStyles()
+
+try {
+    Initialize-AudioDefaultReader
+    $saved = Get-IniSettings $script:SettingsPath
+    $script:inputEndpoints = @(Get-ActiveAudioEndpoints Capture)
+    $script:outputEndpoints = @(Get-ActiveAudioEndpoints Render)
+    $defaultOutputId = [REHUBDemoAudio.DefaultEndpoint]::Read(0)
+    $defaultOutput = @($script:outputEndpoints | Where-Object { $_.Id -eq $defaultOutputId })
+    $script:defaultOutputName = if ($defaultOutput.Count -gt 0) { $defaultOutput[0].Name } else { '' }
+
+    $form = New-Object Windows.Forms.Form
+    $form.Text = 'REHUB - First-time setup / 首次设置'
+    $form.ClientSize = New-Object Drawing.Size(820, 760)
+    $form.MinimumSize = New-Object Drawing.Size(836, 799)
+    $form.StartPosition = 'CenterScreen'
+    $form.Font = New-Object Drawing.Font('Segoe UI', 9)
+    $form.AutoScaleMode = 'Dpi'
+
+    $intro = New-Object Windows.Forms.Label
+    $intro.Location = New-Object Drawing.Point(22, 16)
+    $intro.Size = New-Object Drawing.Size(775, 72)
+    $intro.Text = "Connect Quest Link before starting. Select a working microphone and headphones.`r`n先连接 Quest Link，再选择本机可用的麦克风与播放设备。耳机播放有助于减少回声。`r`nCloud speech and AI require your own Aliyun and DeepSeek credentials. 云服务使用你自己的账户。"
+    $form.Controls.Add($intro)
+
+    $script:rowY = 96
+    function Add-RowControl {
+        param([string]$Label, [Windows.Forms.Control]$Control)
+        $caption = New-Object Windows.Forms.Label
+        $caption.Text = $Label
+        $caption.Location = New-Object Drawing.Point(22, ($script:rowY + 5))
+        $caption.Size = New-Object Drawing.Size(252, 28)
+        $Control.Location = New-Object Drawing.Point(280, $script:rowY)
+        $Control.Size = New-Object Drawing.Size(513, 27)
+        $form.Controls.Add($caption)
+        $form.Controls.Add($Control)
+        $script:rowY += 39
+    }
+
+    $language = New-Object Windows.Forms.ComboBox
+    $language.DropDownStyle = 'DropDownList'
+    [void]$language.Items.Add('English / 英文')
+    [void]$language.Items.Add('Chinese / 中文')
+    $language.SelectedIndex = if ((Get-SettingValue $saved $script:LanguageSection 'DialogueLanguage' 'English') -eq 'Chinese') { 1 } else { 0 }
+    Add-RowControl 'Dialogue language / 对话语言' $language
+
+    function New-DeviceCombo {
+        param([object[]]$Endpoints, [string]$SavedValue, [switch]$IsOutput)
+        $combo = New-Object Windows.Forms.ComboBox
+        $combo.DropDownStyle = 'DropDownList'
+        $combo.DisplayMember = 'Display'
+        $defaultCaption = if ($IsOutput -and $script:defaultOutputName) { 'Windows default / 系统默认 - ' + $script:defaultOutputName } else { 'Windows default / 系统默认' }
+        [void]$combo.Items.Add([pscustomobject]@{Display=$defaultCaption;Name='';Id='default'})
+        foreach ($endpoint in $Endpoints) { [void]$combo.Items.Add($endpoint) }
+        $combo.SelectedIndex = 0
+        for ($i=1; $i -lt $combo.Items.Count; $i++) {
+            $matchesSaved = if ($IsOutput) { $combo.Items[$i].Name -eq $SavedValue } else { $combo.Items[$i].Id -eq $SavedValue }
+            if ($matchesSaved) { $combo.SelectedIndex = $i; break }
+        }
+        return $combo
+    }
+    $microphone = New-DeviceCombo $script:inputEndpoints (Get-SettingValue $saved $script:LanguageSection 'MicrophoneDeviceId' 'default')
+    Add-RowControl 'Recording microphone / 录音麦克风' $microphone
+    $output = New-DeviceCombo $script:outputEndpoints (Get-SettingValue $saved 'REHUB.Audio' 'PreferredOutputDeviceNameContains') -IsOutput
+    Add-RowControl 'Sound output / 声音播放设备' $output
+
+    $fields = @{}
+    foreach ($field in @(
+        @('AliyunAccessKeyId', 'Aliyun AccessKey ID', $true, ''),
+        @('AliyunAccessKeySecret', 'Aliyun AccessKey Secret', $true, ''),
+        @('AliyunAppKey', 'Aliyun NLS AppKey', $true, ''),
+        @('EnglishRecognitionAppKey', 'English ASR AppKey / 可选英文识别', $true, ''),
+        @('DeepSeekApiKey', 'DeepSeek API Key', $true, ''),
+        @('AliyunRegionId', 'Aliyun region / 地域', $false, 'cn-shanghai'),
+        @('DeepSeekModel', 'DeepSeek model / 模型', $false, 'deepseek-flash')
+    )) {
+        $box = New-Object Windows.Forms.TextBox
+        $box.UseSystemPasswordChar = [bool]$field[2]
+        $section = if ($field[0] -eq 'EnglishRecognitionAppKey') { $script:LanguageSection } else { 'REHUB.AI' }
+        $box.Text = Get-SettingValue $saved $section $field[0] $field[3]
+        $fields[$field[0]] = $box
+        Add-RowControl $field[1] $box
+    }
+
+    $notice = New-Object Windows.Forms.Label
+    $notice.Location = New-Object Drawing.Point(22, 500)
+    $notice.Size = New-Object Drawing.Size(775, 72)
+    $notice.Text = "Settings are saved only on this PC. API credentials are stored as text in:`r`n$script:SettingsPath`r`n凭据仅在本机以文本保存；不要上传或分享此文件。填写英文识别 AppKey 前需在阿里云发布英文模型。"
+    $form.Controls.Add($notice)
+
+    $status = New-Object Windows.Forms.Label
+    $status.Location = New-Object Drawing.Point(22, 578)
+    $status.Size = New-Object Drawing.Size(775, 70)
+    $status.ForeColor = [Drawing.Color]::DarkSlateGray
+    $status.Text = "No microphone test or cloud request is performed by this setup tool.`r`n此工具只枚举设备和保存设置，不录音、不进行麦克风自检、不发送云端请求。`r`nReconnect a device? Close and reopen this launcher to refresh the list."
+    $form.Controls.Add($status)
+
+    $save = New-Object Windows.Forms.Button
+    $save.Text = 'Save settings / 保存设置'
+    $save.Location = New-Object Drawing.Point(280, 684)
+    $save.Size = New-Object Drawing.Size(226, 42)
+    $form.Controls.Add($save)
+    $launch = New-Object Windows.Forms.Button
+    $launch.Text = 'Save and start VR / 保存并启动'
+    $launch.Location = New-Object Drawing.Point(521, 684)
+    $launch.Size = New-Object Drawing.Size(272, 42)
+    $form.Controls.Add($launch)
+
+    $collectValues = {
+        $values = @{}
+        foreach ($key in $fields.Keys) { $values[$key] = $fields[$key].Text.Trim() }
+        $values.DialogueLanguage = if ($language.SelectedIndex -eq 1) { 'Chinese' } else { 'English' }
+        $values.MicrophoneDeviceId = [string]$microphone.SelectedItem.Id
+        $values.PreferredOutputDeviceNameContains = if ($output.SelectedIndex -eq 0) { $script:defaultOutputName } else { [string]$output.SelectedItem.Name }
+        return $values
+    }
+    $saveValues = {
+        param([hashtable]$Values)
+        $iniText = New-GameIni $Values
+        [void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($script:SettingsPath))
+        [IO.File]::WriteAllText($script:SettingsPath, $iniText, (New-Object Text.UTF8Encoding($true)))
+        $status.ForeColor = [Drawing.Color]::DarkGreen
+        $status.Text = "Saved on this computer. / 已保存到本机。`r`n$script:SettingsPath"
+    }
+    $save.Add_Click({
+        try { $values = & $collectValues; & $saveValues $values }
+        catch { [void][Windows.Forms.MessageBox]::Show($_.Exception.Message, 'REHUB settings', 'OK', 'Error') }
+    })
+    $launch.Add_Click({
+        try {
+            $values = & $collectValues
+            $required = @('AliyunAccessKeyId','AliyunAccessKeySecret','AliyunAppKey','DeepSeekApiKey','AliyunRegionId','DeepSeekModel')
+            $missing = @($required | Where-Object { [string]::IsNullOrWhiteSpace([string]$values[$_]) })
+            if ($missing.Count -gt 0) {
+                [void][Windows.Forms.MessageBox]::Show("Complete the required cloud settings before starting full speech and AI dialogue.`r`n请先填写完整云服务配置。Missing / 缺少: " + ($missing -join ', '), 'REHUB setup', 'OK', 'Information')
+                return
+            }
+            if ($script:inputEndpoints.Count -eq 0) { throw 'No active microphone found. Connect or enable a recording device, then reopen this launcher. / 未找到可用麦克风。请连接设备后重新打开启动器。' }
+            if ($script:outputEndpoints.Count -eq 0 -or ($output.SelectedIndex -eq 0 -and -not $script:defaultOutputName)) { throw 'No usable playback device found. Select a connected output device. / 未找到可用播放设备。' }
+            $exe = Join-Path $script:ApplicationRoot 'REHUB.exe'
+            $gameBinary = Join-Path $script:ApplicationRoot 'REHUB\Binaries\Win64\REHUB-Win64-Shipping.exe'
+            $content = Join-Path $script:ApplicationRoot 'REHUB\Content\Paks'
+            if (-not (Test-Path -LiteralPath $exe -PathType Leaf) -or -not (Test-Path -LiteralPath $gameBinary -PathType Leaf) -or -not (Test-Path -LiteralPath $content -PathType Container)) {
+                throw 'The complete Windows demo is missing. Extract every folder from the release archive and place this launcher beside REHUB.exe. / 请完整解压试玩包，保留目录结构，并将启动器放在 REHUB.exe 旁。'
+            }
+            & $saveValues $values
+            $arguments = @(('-GameIni="' + $script:SettingsPath + '"'), '-vr', '-windowed', '-ResX=1280', '-ResY=720')
+            Start-Process -FilePath $exe -ArgumentList $arguments -WorkingDirectory $script:ApplicationRoot
+            $form.Close()
+        }
+        catch { [void][Windows.Forms.MessageBox]::Show($_.Exception.Message, 'REHUB could not start', 'OK', 'Error') }
+    })
+    [void]$form.ShowDialog()
+    $form.Dispose()
+}
+catch {
+    [void][Windows.Forms.MessageBox]::Show($_.Exception.Message, 'REHUB launcher', 'OK', 'Error')
+    exit 1
+}

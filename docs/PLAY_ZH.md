@@ -1,0 +1,117 @@
+# REHUB Windows / Quest 3 试玩说明
+
+[下载试玩版](https://github.com/painfulmoments/REHUB-Demo/releases/latest) · [项目主页](../README.zh-CN.md) · [English](PLAY_EN.md)
+
+## 1. 先确认设备
+
+本版本是 **Windows x64 PC VR 程序**。开发阶段的编辑器现场测试使用 **Meta Quest 3、Touch 手柄和有线 Meta Horizon Link**；首次打包版本尚未完成完整头显试玩验证。它不是安装到头显里的 APK；其他头显和 Air Link 尚未验证。
+
+准备以下设备与服务：
+
+- 满足 [Meta Horizon Link 要求](https://www.meta.com/help/quest/140991407990979/)的 Windows x64 电脑。
+- 电脑端 Meta Horizon Link，以及已连接的 Quest 3 和手柄。
+- 一个在 Windows 中实际有输入信号的麦克风。可以使用电脑麦克风；Quest 麦克风不保证在每台电脑的 Link 环境中都可用。
+- 用于听游戏声音的耳机，尽量避免外放声音再次进入麦克风。
+- 网络连接、已开通的阿里云智能语音交互账户，以及 DeepSeek API 账户。
+
+开发实测电脑为 Windows 11、RTX 5070 Laptop GPU（8 GB 显存）、32 GB 内存。这是参考实测配置，不是经过测定的最低配置。
+
+## 2. 下载完整试玩包
+
+**两个 ZIP 都要下载，并解压到同一个目标目录。**
+
+打开 [最新 Release](https://github.com/painfulmoments/REHUB-Demo/releases/latest)，在 **Assets** 中下载：
+
+- **`REHUB-Windows-x64-v1.0.0-Runtime.zip`**
+- **`REHUB-Windows-x64-v1.0.0-GameData.zip`**
+
+它们是两个独立 ZIP，不是 7z 分卷；两个都需要，不需要安装 7-Zip。
+
+### 手动解压
+
+1. 创建或选择一个目标目录，例如 **`C:\VR\`**。
+2. 将 Runtime ZIP 解压到 **`C:\VR\`**。
+3. 将 GameData ZIP 也解压到**同一个 `C:\VR\` 目录**，让两个压缩包共同的 `REHUB-Windows-x64` 文件夹合并。
+4. 打开 **`C:\VR\REHUB-Windows-x64\`**，双击里面的 **`Launch-REHUB.cmd`**。
+
+**Windows 通常会默认按每个 ZIP 的文件名分别创建解压目录，请把两次的目标目录都改为同一个文件夹。** 不要让运行程序和游戏资源分散在两个包名目录里，也不要只把启动器或 EXE 拷走。
+
+### 可选解压助手
+
+也可以从同一 Release 下载 **`Extract-REHUB.cmd`**，与两个 ZIP 放在同一个文件夹后双击。它只在本地将两个包解压到共同目录，不会下载文件或安装软件。不使用助手时，按上面的手动步骤操作即可。
+
+**“Source code (zip)”和“Source code (tar.gz)”不是试玩程序。** 不要在压缩包内部直接运行，也不要只把 EXE 拷走；程序、运行库和资源子目录必须保留在一起。
+
+试玩无需安装 Unreal Editor 或 Visual Studio。如果提示缺少 Visual C++ 运行库，可安装试玩包附带的运行环境（若有），或使用 [微软官方 x64 Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist)。不要从不相关的软件目录随意复制 DLL。
+
+## 3. 准备自己的云服务凭据
+
+公开试玩版采用自备凭据模式，不内置共享服务密钥。请为启动器准备：
+
+| 启动器配置 | 用途 |
+|---|---|
+| 阿里云 AccessKey ID | 语音服务账户鉴权 |
+| 阿里云 AccessKey Secret | 与 AccessKey ID 配对的密钥 |
+| 阿里云 NLS AppKey | 智能语音交互项目标识 |
+| 英文识别 AppKey（按需） | 使用独立英文识别项目时填写 |
+| DeepSeek API Key | AI 辅助对话回复 |
+
+### 阿里云语音配置
+
+先开通智能语音交互，创建项目并取得 AppKey，再为项目选择与实际说话语言对应的识别模型并**发布配置**。每个 AppKey 对应自己的项目配置。具体步骤参见 [阿里云创建与管理项目说明](https://help.aliyun.com/zh/isi/getting-started/manage-projects/)。
+
+英文识别应使用已发布的 **16 kHz 通用英语识别模型**；如果另填英文识别 AppKey，它应指向对应的英文项目。**启动器切换中文或英文，不会自动更改阿里云的识别模型。** 语言和场景模型需要在 NLS 控制台配置，不能靠识别请求参数指定，参见 [一句话识别官方接口说明](https://help.aliyun.com/zh/isi/user-guide/restful-api-2)。
+
+本项目英文音色为 **`cally`**，官方将其列为支持 16 kHz 的美式英语音色；能否使用取决于账户权限和服务配置，参见 [官方音色表](https://help.aliyun.com/en/isi/user-guide/overview-of-speech-synthesis)。
+
+### DeepSeek 配置
+
+在 [DeepSeek 平台](https://platform.deepseek.com/)获取 API Key，并填写到启动器。启动器默认使用 **`deepseek-flash`**，也允许修改模型名。服务和模型名称会变化；如果出现模型不可用错误，请根据 [官方模型列表](https://api-docs.deepseek.com/api/list-models/)和 [API 使用说明](https://api-docs.deepseek.com/quick_start/)选择账户当前支持的模型。
+
+云服务可能对试玩者自己的账户计费。录音会发送给阿里云做识别；对话路径可能将识别文字和练习上下文发送给 DeepSeek；数字人回复文本会发送给阿里云合成语音。凭据只在本机设置，不要公开发布到 Issue 或截图中。
+
+## 4. 连接 Link 并启动
+
+1. 在电脑打开 **Meta Horizon Link**，连接 Quest 3。首次连接可参考 [Meta 官方设置说明](https://www.meta.com/help/quest/509273027107091/)。
+2. 戴上头显，在头显里进入 **Link**，确认已经看到 Link 环境。
+3. 在电脑双击试玩文件夹中的 **`Launch-REHUB.cmd`**。
+4. 选择**中文或英文**、这台电脑实际使用的**录音麦克风**和**声音输出设备**。
+5. 填写云服务凭据，启动体验。
+6. 回到头显，等待数字人说完欢迎语再回答。
+
+设备要从**当前电脑**的列表选择，不能照搬开发电脑上的编号或设备标识。程序启动后若更换语言、麦克风或输出设置，请关闭游戏，在启动器改好后重新启动。
+
+推荐用耳机听游戏声音，并保留自己选择的麦克风作为输入。改用笔记本扬声器外放，仍然可能被笔记本麦克风再次录入，产生回声。
+
+## 5. 手柄操作与对话节奏
+
+| 操作 | 功能 |
+|---|---|
+| 左摇杆 | 移动 |
+| 右摇杆左右拨动 | 转向 |
+| 右手柄 **A**，第一次按下 | 开始录音 |
+| 右手柄 **A**，第二次按下 | 结束录音并提交 |
+| 关闭电脑游戏窗口 / **Alt+F4** | 退出 |
+
+**A 不用按住。** 等数字人说完，按 A，稍停片刻，再清楚地说一句回答；说完稍停片刻，再按 A 提交。等回复后再开始下一次录音。
+
+按实际听到的问题回答。数字人要求观察物体或做几次呼吸时，先完成动作，再回答已经完成。体验包括视觉观察、声音觉察、认知着陆、呼吸调节和结束整合；AI 辅助追问的具体措辞可能变化。
+
+## 6. 常见问题
+
+| 现象 | 先检查什么 |
+|---|---|
+| 还停留在 Link 房间 | 确认 Link 已连接、Windows 游戏正在运行，检查当前 OpenXR 运行时是否为 Meta Horizon Link；必要时重连 Link 后重新启动游戏。 |
+| 听不到欢迎语 | 检查选中的输出设备和音量，再检查 NLS 是否开通、凭据是否正确、项目是否配置，以及网络是否可用。 |
+| 说话后数字人没有回应 | 确认启动器选中的是你实际对着说话的麦克风，检查 Windows 输入电平；Quest 输入无信号时可改选电脑麦克风。 |
+| 回答似乎答非所问 | 可能有识别错词。等数字人说完，再录一段简短、清楚的回答。 |
+| 反复问同一步骤 | 先实际完成要求的动作，再明确说明完成；不要连按 A，也不要在数字人说话时抢答。 |
+| 鉴权失败或模型不可用 | 核对凭据、服务开通状态、发布的识别语言、账户权限和当前模型名称。 |
+| 画面卡顿 | 先关闭录屏做对照，关闭无关的高显卡占用程序，并检查 Link 图形设置；性能取决于电脑硬件。 |
+| 缺 DLL、游戏资源或运行环境 | 确认两个 ZIP 都解压到同一个目标目录，合并成一个 `REHUB-Windows-x64` 文件夹；按需安装附带运行环境或微软官方 x64 运行库。 |
+
+不同设备上的录音输入、语音识别和云服务可用性无法保证完全一致。反馈问题请到 [Issues](https://github.com/painfulmoments/REHUB-Demo/issues)，提供 Windows 版本、显卡、头显、Link 连接方式和复现步骤，并移除附件中的凭据。
+
+REHUB 是研究与作品展示原型，尚未经过作为医疗治疗手段的临床验证。
+
+[第三方说明与使用范围](THIRD_PARTY_NOTICES.md)
